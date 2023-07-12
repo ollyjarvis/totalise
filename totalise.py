@@ -21,12 +21,25 @@ for f in file_list:
         audio = FLAC(f)
         artist = audio.tags['artist'][0].replace('/', '_').replace('\\' , '_').strip() # type: ignore
         new_dir = os.path.join(music_dir, artist)
-        genres = audio.tags['genre'] # type: ignore
+        try:
+            genres = audio.tags['genre'] # type: ignore
+        except:
+            genres = []
         new_genre_list = []
+        if genres:
+            pass
+        else:
+            print(parsed_f)
+            tags = input(print("File has no genre tags, Enter genres separated by Comma: ")).split(',')
+            for genre in tags:    
+                new_genre_list.append(genre.strip())
 
         for i in genres:
             new_genre_list.append(i)
             split_genres = []
+            
+            if i == 'Miscellaneous':
+                new_genre_list.remove(i)
             
             if '&' in i and "R&B" not in i:
                 split_genres = i.split('&')
@@ -43,16 +56,20 @@ for f in file_list:
                 for x in split_genres:
                     new_genre_list.append(x.strip())
                 count += 1
-                
-            if i == 'Progressive Rock':
+
+            if ',' in i:
+                split_genres = i.split(',')
                 new_genre_list.remove(i)
-                new_genre_list.append('Rock')
+
+                for x in split_genres:
+                    new_genre_list.append(x.strip())
+                count += 1
                 
-            if i == 'Hard Rock':
+            if 'Rock' in i and 'Rock' != i:
                 new_genre_list.remove(i)
                 new_genre_list.append('Rock')
 
-            if i == 'Contemporary Jazz':
+            if 'Jazz' in i and 'Jazz' != i:
                 new_genre_list.remove(i)
                 new_genre_list.append('Jazz')
 
@@ -60,6 +77,32 @@ for f in file_list:
                 new_genre_list.remove(i)
                 new_genre_list.append('Rock')
                 new_genre_list.append('Punk')
+            
+            if i == 'Trip Hop' or i == 'Trip-Hop':
+                new_genre_list.remove(i)
+                new_genre_list.append('Hip-Hop')
+                new_genre_list.append('Dance')
+            
+            if i == 'Avant-Garde':
+                new_genre_list.remove(i)
+                
+            if i == 'World':
+                new_genre_list.remove(i)
+            
+            if i == 'Alternatif et Indé':
+                new_genre_list.remove(i)
+                new_genre_list.append('Alternative')
+                new_genre_list.append('Indie')
+            
+            if 'Film' in i:
+                new_genre_list.remove(i)
+            
+            if i == 'French Music':
+                new_genre_list.remove(i)
+                
+            if i == 'House':
+                new_genre_list.remove(i)
+                new_genre_list.append('Dance')
                 
                 for x in split_genres:
                     new_genre_list.append(x.strip())
@@ -81,3 +124,12 @@ for f in file_list:
             print("Skipped ", parsed_f, " \nFile of same name in output folder !")
 
 print("Finished, moved ", count, " files")
+
+empty = []
+  
+empty = [root for root, dirs, files, in os.walk(music_dir)
+                   if not len(dirs) and not len(files)]
+
+for folder in empty:
+    os.rmdir(folder)
+    print('Removed ', folder, 'as it is now empty')
