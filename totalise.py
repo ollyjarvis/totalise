@@ -80,4 +80,11 @@ for f in file_list:
         else:
             print("Skipped ", parsed_f, " \nFile of same name in output folder !")
 
+empty = [root for root, dirs, files, in os.walk(music_dir)
+         if not len(dirs) and not len(files)]
+
+for folder in empty:
+    os.rmdir(folder)
+    print('Removed', folder, 'as it is now empty')
+
 print("Finished, moved ", count, " files")
