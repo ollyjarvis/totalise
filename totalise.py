@@ -25,6 +25,7 @@ for f in file_list:
         new_genre_list = []
 
         for i in genres:
+            i = str(i)
             new_genre_list.append(i)
             split_genres = []
             
@@ -44,15 +45,11 @@ for f in file_list:
                     new_genre_list.append(x.strip())
                 count += 1
                 
-            if i == 'Progressive Rock':
-                new_genre_list.remove(i)
-                new_genre_list.append('Rock')
-                
-            if i == 'Hard Rock':
+            if 'Rock' in i and i != 'Rock':
                 new_genre_list.remove(i)
                 new_genre_list.append('Rock')
 
-            if i == 'Contemporary Jazz':
+            if 'Jazz' in i and i != 'Jazz':
                 new_genre_list.remove(i)
                 new_genre_list.append('Jazz')
 
@@ -60,13 +57,28 @@ for f in file_list:
                 new_genre_list.remove(i)
                 new_genre_list.append('Rock')
                 new_genre_list.append('Punk')
+            
+            if 'Film' in i or 'Soundtrack' in i:
+                new_genre_list.remove(i)
+                new_genre_list.append('Miscellaneous')
                 
-                for x in split_genres:
-                    new_genre_list.append(x.strip())
-                count += 1
-
+            if 'Musical Theatre' in i:
+                new_genre_list.remove(i)
+                new_genre_list.append('Miscellaneous')
+            
+            if 'Latin' in i:
+                new_genre_list.remove(i)
+                new_genre_list.append('Miscellaneous')
+            
+            if 'Children' in i:
+                new_genre_list.remove(i)
+                new_genre_list.append('Miscellaneous')
+            
+            if 'Classical' in i:
+                new_genre_list.remove(i)
+                new_genre_list.append('Miscellaneous')
+                
         if new_genre_list != genres:
-            print("Changed ", f)
             audio.tags['genre'] = new_genre_list # type: ignore
             audio.save()
         
@@ -77,8 +89,6 @@ for f in file_list:
         if os.path.isfile(os.path.join(new_dir, parsed_f)) == False:
             os.rename(f, os.path.join(new_dir, parsed_f))
             count += 1
-        else:
-            print("Skipped ", parsed_f, " \nFile of same name in output folder !")
 
 empty = [root for root, dirs, files, in os.walk(music_dir)
          if not len(dirs) and not len(files)]
