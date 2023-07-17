@@ -1,12 +1,14 @@
 import os
 from mutagen.flac import FLAC
 
+
 def list_files(dir):
     r = []
     for root, dirs, files in os.walk(dir):
         for name in files:
             r.append(os.path.join(root, name))
     return r
+
 
 source_dir = input("Enter Directory to move FROM: ")
 music_dir = input("Enter Directory to move TO: ")
